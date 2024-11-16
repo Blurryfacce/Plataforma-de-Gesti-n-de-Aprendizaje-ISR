@@ -11,12 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import Plataforma.Controllers.RegistroEstudianteController;
+// import Plataforma.Controllers.RegistroEstudianteController;
+import Plataforma.Controllers.DAO.EstudianteDAO;
 
 public class RegistroEstudianteGUI extends JFrame {
     private JTextField txtCedula, txtNombre, txtApellido, txtEmail, txtDireccion;
     private JButton btnRegistrarEstudiante;
-    private RegistroEstudianteController controller;
+    // private RegistroEstudianteController controller;
 
     public RegistroEstudianteGUI() {
         setTitle("Registro de Estudiante");
@@ -24,7 +25,7 @@ public class RegistroEstudianteGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        controller = new RegistroEstudianteController();
+        // controller = new RegistroEstudianteController();
 
         JPanel panel = new JPanel(new GridLayout(6, 2, 5, 5));
         panel.add(new JLabel("Nombre:"));
@@ -55,20 +56,24 @@ public class RegistroEstudianteGUI extends JFrame {
     }
 
     private void registrarEstudiante(ActionEvent e) {
+        // Obtener datos de los campos de texto
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
         String cedula = txtCedula.getText().trim();
         String email = txtEmail.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
+        // Verifica que los campos no estén vacíos
         if (nombre.isEmpty() || apellido.isEmpty() || cedula.isEmpty() || email.isEmpty() || direccion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
             return;
         }
 
-        boolean resultado = controller.registrarEstudiante(nombre, apellido, cedula, email, direccion);
+        // Llamar al metodo del DAO para insertar en la base de datos
+        boolean registrado = EstudianteDAO.insertarEstudiante(nombre, apellido, cedula, email, direccion);
 
-        if (resultado) {
+
+        if (registrado) {
             JOptionPane.showMessageDialog(this, "Estudiante registrado con éxito.");
             limpiarCampos();
         } else {
