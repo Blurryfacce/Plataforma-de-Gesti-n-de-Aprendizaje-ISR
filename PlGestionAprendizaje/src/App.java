@@ -1,27 +1,27 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
 
 import Plataforma.Database.DatabaseInitializer;
-import Plataforma.GUI.Estudiante.RegistroEstudianteGUI;
+import Plataforma.GUI.HomeGUI;
 
 public class App {
-    public static void main(String[] args) {
-        // Configurar el tema FlatLaf
-        try {
-            UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
 
+    public static void main(String[] args) {
         // Inicializar la base de datos
         DatabaseInitializer.initializeDatabase();
 
-        // Lanza la interfaz gráfica
+        // Aplicar el tema de FlatLaf (FlatDarkFlatIJTheme)
+        try {
+            UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Lanzar la interfaz gráfica principal (Login)
         SwingUtilities.invokeLater(() -> {
-            new RegistroEstudianteGUI().setVisible(true);
+            new HomeGUI().setVisible(true);
         });
     }
 }

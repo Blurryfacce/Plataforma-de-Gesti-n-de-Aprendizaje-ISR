@@ -8,4 +8,13 @@ CREATE TABLE IF NOT EXISTS Estudiantes(
     email TEXT NOT NULL,
     direccion TEXT
 );
--- Insertar datos 
+
+-- Tabla de docentes
+CREATE TABLE IF NOT EXISTS Docentes (
+    id_Docente INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    cedula CHAR(10) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
+    departamento VARCHAR(100) NOT NULL
+);
