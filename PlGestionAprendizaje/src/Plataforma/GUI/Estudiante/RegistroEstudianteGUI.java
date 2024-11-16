@@ -1,7 +1,7 @@
 package Plataforma.GUI.Estudiante;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,13 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
-import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
-
+import Plataforma.Controllers.Validaciones;
 import Plataforma.Controllers.DAO.EstudianteDAO;
 
 public class RegistroEstudianteGUI extends JFrame {
@@ -30,71 +25,74 @@ public class RegistroEstudianteGUI extends JFrame {
 
     public RegistroEstudianteGUI() {
         setTitle("Registro de Estudiante");
-        setSize(450, 350);
+        setSize(500, 400); // Formulario más amplio
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Configuración del layout y estilo
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        JLabel lblTitulo = new JLabel("Registro de Estudiante", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 18));
-        lblTitulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        mainPanel.add(lblTitulo, BorderLayout.NORTH);
-
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // Márgenes internos
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10); // Separación entre componentes
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Etiqueta y campo para Nombre
         gbc.gridx = 0; gbc.gridy = 0;
-        panelFormulario.add(new JLabel("Nombre:"), gbc);
+        panel.add(new JLabel("Nombre:"), gbc);
         txtNombre = new JTextField();
+        estilizarCampo(txtNombre);
         gbc.gridx = 1; gbc.gridy = 0;
-        panelFormulario.add(estilizarCampo(txtNombre), gbc);
+        panel.add(txtNombre, gbc);
 
         // Etiqueta y campo para Apellido
         gbc.gridx = 0; gbc.gridy = 1;
-        panelFormulario.add(new JLabel("Apellido:"), gbc);
+        panel.add(new JLabel("Apellido:"), gbc);
         txtApellido = new JTextField();
+        estilizarCampo(txtApellido);
         gbc.gridx = 1; gbc.gridy = 1;
-        panelFormulario.add(estilizarCampo(txtApellido), gbc);
+        panel.add(txtApellido, gbc);
 
         // Etiqueta y campo para Cédula
         gbc.gridx = 0; gbc.gridy = 2;
-        panelFormulario.add(new JLabel("Cédula:"), gbc);
+        panel.add(new JLabel("Cédula:"), gbc);
         txtCedula = new JTextField();
+        estilizarCampo(txtCedula);
         gbc.gridx = 1; gbc.gridy = 2;
-        panelFormulario.add(estilizarCampo(txtCedula), gbc);
+        panel.add(txtCedula, gbc);
 
         // Etiqueta y campo para Email
         gbc.gridx = 0; gbc.gridy = 3;
-        panelFormulario.add(new JLabel("Email:"), gbc);
+        panel.add(new JLabel("Email:"), gbc);
         txtEmail = new JTextField();
+        estilizarCampo(txtEmail);
         gbc.gridx = 1; gbc.gridy = 3;
-        panelFormulario.add(estilizarCampo(txtEmail), gbc);
+        panel.add(txtEmail, gbc);
 
-        // Etiqueta y campo para Dirección
+        // Etiqueta y campo para Dirección (opcional)
         gbc.gridx = 0; gbc.gridy = 4;
-        panelFormulario.add(new JLabel("Dirección:"), gbc);
+        panel.add(new JLabel("Dirección (opcional):"), gbc);
         txtDireccion = new JTextField();
+        estilizarCampo(txtDireccion);
         gbc.gridx = 1; gbc.gridy = 4;
-        panelFormulario.add(estilizarCampo(txtDireccion), gbc);
+        panel.add(txtDireccion, gbc);
 
         // Botón de Registrar
         btnRegistrarEstudiante = new JButton("Registrar Estudiante");
+        estilizarBoton(btnRegistrarEstudiante);
         btnRegistrarEstudiante.addActionListener(this::registrarEstudiante);
         gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 2;
-        panelFormulario.add(estilizarBoton(btnRegistrarEstudiante), gbc);
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(btnRegistrarEstudiante, gbc);
+        getRootPane().setDefaultButton(btnRegistrarEstudiante);
 
-        mainPanel.add(panelFormulario, BorderLayout.CENTER);
-        add(mainPanel);
+        add(panel);
     }
 
+    /**
+     * Funcion que registra en base de datos y valida los datos ingresados por el estudiante
+     * @param e
+     */
     private void registrarEstudiante(ActionEvent e) {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -102,11 +100,29 @@ public class RegistroEstudianteGUI extends JFrame {
         String email = txtEmail.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
-        if (nombre.isEmpty() || apellido.isEmpty() || cedula.isEmpty() || email.isEmpty() || direccion.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+        
+        // Validar los campos
+        if (!Validaciones.validarNombreOApellido(nombre)) {
+            JOptionPane.showMessageDialog(this, "El nombre no es válido. No debe contener números y debe tener entre 2 y 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        if (!Validaciones.validarNombreOApellido(apellido)) {
+            JOptionPane.showMessageDialog(this, "El apellido no es válido. No debe contener números y debe tener entre 2 y 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!Validaciones.validarCedula(cedula)) {
+            JOptionPane.showMessageDialog(this, "La cédula debe contener exactamente 10 dígitos numéricos.", "Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!Validaciones.validarEmail(email)) {
+            JOptionPane.showMessageDialog(this, "El email no es válido. Debe contener '@' y terminar en '.com' o '.edu'.", "Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!direccion.isEmpty() && !Validaciones.validarDireccion(direccion)) {
+            JOptionPane.showMessageDialog(this, "La dirección no es válida. Debe ser una ubicación real sin códigos postales.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Lógica para registrar al estudiante en la base de datos
         boolean registrado = EstudianteDAO.insertarEstudiante(nombre, apellido, cedula, email, direccion);
 
         if (registrado) {
@@ -117,6 +133,9 @@ public class RegistroEstudianteGUI extends JFrame {
         }
     }
 
+    /**
+     * Método para limpiar los campos del registro 
+     */
     private void limpiarCampos() {
         txtNombre.setText("");
         txtApellido.setText("");
@@ -125,32 +144,29 @@ public class RegistroEstudianteGUI extends JFrame {
         txtDireccion.setText("");
     }
 
-    private JTextField estilizarCampo(JTextField campo) {
-        campo.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(100, 100, 100), 1),
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
-        return campo;
+    /**
+     * Método para personalizar campos de registro del estudiante
+     * @param campo
+     */
+    private void estilizarCampo(JTextField campo) {
+        campo.setPreferredSize(new Dimension(300, 30));
+        campo.setBackground(new Color(30, 30, 30));
+        campo.setForeground(Color.WHITE);
+        campo.setCaretColor(Color.WHITE);
+        campo.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 70)));
+        campo.setFont(new Font("Arial", Font.PLAIN, 14));
     }
 
-    private JButton estilizarBoton(JButton boton) {
-        boton.setBackground(new Color(50, 50, 50));
+    /**
+     * Método para personalizar botón de registro del estudiante
+     * @param boton
+     */
+    private void estilizarBoton(JButton boton) {
+        boton.setBackground(new Color(45, 45, 45));
         boton.setForeground(Color.WHITE);
+        boton.setFont(new Font("Arial", Font.BOLD, 14));
         boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(100, 100, 100), 1),
-            BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-        return boton;
+        boton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(() -> new RegistroEstudianteGUI().setVisible(true));
-    }
 }

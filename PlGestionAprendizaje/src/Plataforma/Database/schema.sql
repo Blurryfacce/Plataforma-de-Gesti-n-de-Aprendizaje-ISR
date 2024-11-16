@@ -8,5 +8,4 @@ CREATE TABLE IF NOT EXISTS Estudiantes(
     email TEXT NOT NULL,
     direccion TEXT
 );
-
 -- Insertar datos 
