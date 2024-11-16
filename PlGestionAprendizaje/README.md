@@ -1,18 +1,17 @@
-## Getting Started
+# Especificaciones
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Separación en Subpaquetes
 
-## Folder Structure
++ `gui`: Aloja el código relacionado con la interfaz gráfica. Se subdivide según la funcionalidad específica (estudiantes, docentes y comunes).
+controllers: Implementa la lógica de negocio que conecta la interfaz gráfica con las operaciones del sistema.
++ `dao`: Contiene el acceso a la base de datos para cada entidad (CRUD).
++ `models`: Define las entidades del sistema (por ejemplo, Estudiante, Docente).
++ `utils`: Provee herramientas útiles, como la conexión a la base de datos o validaciones.
 
-The workspace contains two folders by default, where:
+## Archivo de Punto de Entrada (app.java)
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+Este archivo principal inicia tu aplicación y puede estar en el paquete raíz (com.tuempresa.plataforma).
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Directorios Existentes (lib)
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Mantén esta carpeta para las bibliotecas externas que podrías usar, como MySQL Connector para bases de datos o JavaFX para GUI.
