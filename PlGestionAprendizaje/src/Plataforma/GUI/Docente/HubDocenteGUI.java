@@ -82,7 +82,7 @@ public class HubDocenteGUI extends JFrame {
      * Acción para abrir la ventana de Crear Curso.
      */
     private void abrirCrearCurso(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, "Aquí se abrirá la funcionalidad para Crear Curso.");
+        new CrearCursoGUI().setVisible(true);
         // Implementar funcionalidad específica para Crear Curso.
     }
 

@@ -22,3 +22,12 @@ CREATE TABLE IF NOT EXISTS Docentes (
     usuario_Docent TEXT NOT NULL,
     clave TEXT NOT NULL
 );
+
+-- Tabla de curso
+CREATE TABLE IF NOT EXISTS Curso (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    descripcion TEXT,
+    Docente INTEGER NOT NULL,
+    FOREIGN KEY (id_Docente) REFERENCES Docente(id)
+);
