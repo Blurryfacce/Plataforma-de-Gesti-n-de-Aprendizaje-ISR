@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
@@ -14,19 +15,22 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import Plataforma.Controllers.Validaciones;
 import Plataforma.Controllers.DAO.DocenteDAO;
+import Plataforma.GUI.HomeGUI;
+import Plataforma.GUI.LoginGUI;
 
 public class RegistrarDocenteGUI extends JFrame {
     private JTextField txtNombre, txtApellido, txtCedula, txtEmail, txtDepartamento;
-    private JButton btnRegistrarDocente;
+    private JButton btnRegistrarDocente, btnVolver;
 
     public RegistrarDocenteGUI() {
         setTitle("Registro de Docente");
-        setSize(500, 400);
+        setSize(500, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -86,7 +90,17 @@ public class RegistrarDocenteGUI extends JFrame {
         panel.add(btnRegistrarDocente, gbc);
         getRootPane().setDefaultButton(btnRegistrarDocente);
 
+        // Botón Volver
+        btnVolver = new JButton("< Volver");
+        btnVolver.addActionListener(e -> volverAlHome());
+        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        panel.add(btnVolver, gbc);
         add(panel);
+    }        
+        
+    private void volverAlHome() {
+        this.dispose(); //Cierra ventana actual
+        new HomeGUI().setVisible(true);
     }
 
     /**
@@ -125,38 +139,85 @@ public class RegistrarDocenteGUI extends JFrame {
 
         // Validaciones
         if (!Validaciones.validarNombreOApellido(nombre)) {
-            JOptionPane.showMessageDialog(this, "El nombre no es válido. No debe contener números.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El nombre no es válido. No debe contener números.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (!Validaciones.validarNombreOApellido(apellido)) {
-            JOptionPane.showMessageDialog(this, "El apellido no es válido. No debe contener números.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El apellido no es válido. No debe contener números.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (!Validaciones.validarCedula(cedula)) {
-            JOptionPane.showMessageDialog(this, "La cédula debe contener exactamente 10 dígitos.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La cédula debe contener exactamente 10 dígitos.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (!Validaciones.validarEmail(email)) {
-            JOptionPane.showMessageDialog(this, "El email no es válido. Debe contener '@' y un dominio válido como '.com' o '.edu'.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "El email no es válido. Debe contener '@' y un dominio válido como '.com' o '.edu'.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (departamento.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El campo de departamento no puede estar vacío.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El campo de departamento no puede estar vacío.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Llamar al método del DAO para insertar en la base de datos
-        boolean registrado = DocenteDAO.insertarDocente(nombre, apellido, cedula, email, departamento);
+        // Mostrar panel de diálogo para usuario y contraseña
+        JPanel dialogPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JTextField txtUsuario = new JTextField();
+        JPasswordField txtContrasena = new JPasswordField();
+        JPasswordField txtConfirmarContrasena = new JPasswordField();
 
-        if (registrado) {
-            JOptionPane.showMessageDialog(this, "Docente registrado con éxito.");
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al registrar al docente.");
+        dialogPanel.add(new JLabel("Usuario:"));
+        dialogPanel.add(txtUsuario);
+        dialogPanel.add(new JLabel("Contraseña:"));
+        dialogPanel.add(txtContrasena);
+        dialogPanel.add(new JLabel("Confirmar Contraseña:"));
+        dialogPanel.add(txtConfirmarContrasena);
+
+        int option = JOptionPane.showConfirmDialog(this, dialogPanel, "Crear credenciales",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String usuario = txtUsuario.getText().trim();
+            String contrasena = new String(txtContrasena.getPassword());
+            String confirmarContrasena = new String(txtConfirmarContrasena.getPassword());
+
+            // Validar credenciales
+            if (usuario.isEmpty() || contrasena.isEmpty() || confirmarContrasena.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos de credenciales son obligatorios.");
+                return;
+            }
+
+            if (!contrasena.equals(confirmarContrasena)) {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.");
+                return;
+            }
+
+            try {
+                boolean registrado = DocenteDAO.insertarDocente(nombre, apellido, cedula, email, departamento,
+                        usuario, contrasena);
+                if (registrado) {
+                    JOptionPane.showMessageDialog(this, "Docente registrado con éxito.");
+                    this.limpiarCampos();
+                    this.dispose();
+                    new LoginGUI().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al registrar al docente. Intente nuevamente.");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace(); // Imprime el error en la consola
+            }
+
         }
     }
 

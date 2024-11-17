@@ -18,8 +18,8 @@ public class DocenteDAO {
      * @param departamento El departamento del docente.
      * @return true si el registro fue exitoso, false en caso contrario.
      */
-    public static boolean insertarDocente(String nombre, String apellido, String cedula, String email, String departamento) {
-        String sql = "INSERT INTO Docentes (nombre, apellido, cedula, email, departamento) VALUES (?, ?, ?, ?, ?)";
+    public static boolean insertarDocente(String nombre, String apellido, String cedula, String email, String departamento, String usuario, String contrasena) {
+        String sql = "INSERT INTO Docentes (nombre, apellido, cedula, email, departamento, usuario_Docent, clave) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection connection = DatabaseConnection.connect();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -30,6 +30,8 @@ public class DocenteDAO {
             pstmt.setString(3, cedula);
             pstmt.setString(4, email);
             pstmt.setString(5, departamento);
+            pstmt.setString(6, usuario);
+            pstmt.setString(7, contrasena);
 
             // Ejecutar la consulta
             pstmt.executeUpdate();

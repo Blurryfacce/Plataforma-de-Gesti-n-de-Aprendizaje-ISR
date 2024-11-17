@@ -7,30 +7,43 @@ import java.sql.ResultSet;
 import Plataforma.Database.DatabaseConnection;
 
 public class UsuarioDAO {
+    /**
+     * Método para validar si un docente existe en la base de datos con las credenciales dadas.
+     * @param usuario Nombre de usuario del docente.
+     * @param clave Contraseña del docente.
+     * @return true si las credenciales son válidas, false en caso contrario.
+     */
+    public boolean validarDocente(String usuario, String clave) {
+        String sql = "SELECT * FROM Docentes WHERE usuario_Docent = ? AND clave = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, usuario);
+            pstmt.setString(2, clave);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next(); // Devuelve true si encontró un registro
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
-     * Valida las credenciales de usuario y devuelve el rol correspondiente.
-     * 
-     * @param usuario    El nombre de usuario o email ingresado.
-     * @param contraseña La contraseña ingresada.
-     * @return El rol del usuario ("docente", "estudiante") o null si no es válido.
+     * Método para validar si un estudiante existe en la base de datos con las credenciales dadas.
+     * @param usuario Nombre de usuario del estudiante.
+     * @param clave Contraseña del estudiante.
+     * @return true si las credenciales son válidas, false en caso contrario.
      */
-    public static String obtenerRolUsuario(String usuario, String contraseña) {
-        String sql = "SELECT rol FROM usuarios WHERE usuario = ? AND contraseña = ?";
+    public boolean validarEstudiante(String usuario, String clave) {
+        String sql = "SELECT * FROM Estudiantes WHERE usuario_Estu = ? AND clave = ?";
         try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, usuario);
-            stmt.setString(2, contraseña);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("rol"); // Retorna el rol: "docente" o "estudiante"
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, usuario);
+            pstmt.setString(2, clave);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next(); // Devuelve true si encontró un registro
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null; // Credenciales inválidas
+        return false;
     }
 }
