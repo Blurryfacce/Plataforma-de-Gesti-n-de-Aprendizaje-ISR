@@ -50,4 +50,5 @@ public class Curso {
     public void setid_Docente(String docente) {
         this.docente = docente;
     }
+
 }
