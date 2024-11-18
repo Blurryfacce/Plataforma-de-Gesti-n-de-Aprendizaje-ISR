@@ -17,8 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import Plataforma.Controllers.LoginController;
 import Plataforma.GUI.Docente.HubDocenteGUI;
@@ -104,6 +102,7 @@ public class LoginGUI extends JFrame {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(btnLogin, gbc);
+        getRootPane().setDefaultButton(btnLogin);
 
         // Botón de volver
         btnVolver = new JButton("Volver");
@@ -180,12 +179,4 @@ public class LoginGUI extends JFrame {
         campo.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        SwingUtilities.invokeLater(() -> new LoginGUI().setVisible(true));
-    }
 }

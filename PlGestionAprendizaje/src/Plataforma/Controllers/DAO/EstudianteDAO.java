@@ -6,26 +6,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Plataforma.Database.DatabaseConnection;
+import Plataforma.Models.Estudiante;
 
 public class EstudianteDAO {
-    public static boolean insertarEstudiante(String nombre, String apellido, String cedula, String email, String direccion, String usuario, String contrasena) {
-        try (Connection conn = DatabaseConnection.connect(); // Reemplaza con tu clase de conexión
-             PreparedStatement stmt = conn.prepareStatement(
-                 "INSERT INTO Estudiantes (nombre, apellido, cedula, email, direccion, usuario_Estu, clave) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-    
-            stmt.setString(1, nombre);
-            stmt.setString(2, apellido);
-            stmt.setString(3, cedula);
-            stmt.setString(4, email);
-            stmt.setString(5, direccion.isEmpty() ? null : direccion); // Manejo de dirección opcional
-            stmt.setString(6, usuario);
-            stmt.setString(7, contrasena); // Nota: encriptar contraseñas antes de almacenarlas
-    
-            
-            int filasInsertadas = stmt.executeUpdate();
-            return filasInsertadas > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+    /**
+     * Inserta un estudiante en la base de datos
+     * @param estudiante
+     * @return
+     */
+    public static boolean insertarEstudiante(Estudiante estudiante) {
+        String sql = "INSERT INTO Estudiantes (nombre, apellido, cedula, email, direccion, usuario_Estu, clave) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        try (Connection connection = DatabaseConnection.connect();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Configuración de parámetros
+            pstmt.setString(1, estudiante.getNombre());
+            pstmt.setString(2, estudiante.getApellido());
+            pstmt.setString(3, estudiante.getCedula());
+            pstmt.setString(4, estudiante.getEmail());
+            pstmt.setString(5, estudiante.getDireccion());
+            pstmt.setString(6, estudiante.getUsuario());
+            pstmt.setString(7, estudiante.getClave());
+
+            // Ejecutar la consulta
+            pstmt.executeUpdate();
+            System.out.println("Estudiante registrado exitosamente en la base de datos.");
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("Error al insertar el estudiante: " + e.getMessage());
             return false;
         }
     }

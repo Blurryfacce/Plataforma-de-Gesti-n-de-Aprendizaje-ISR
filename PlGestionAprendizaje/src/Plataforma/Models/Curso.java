@@ -4,21 +4,9 @@ public class Curso {
     private int id;
     private String nombre;
     private String descripcion;
-    private String docente; // Asegúrate de tener este atributo.
+    private int idDocente; // Se almacenará el ID del docente asociado
 
-    // Constructor completo
-    public Curso(int id, String nombre, String descripcion, String docente) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.docente = docente;
-    }
-
-    // Constructor vacío (opcional, pero útil para frameworks)
-    public Curso() {
-    }
-
-    // Getters y Setters
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -43,12 +31,11 @@ public class Curso {
         this.descripcion = descripcion;
     }
 
-    public String getid_Docente() { // Este método debe existir.
-        return docente;
+    public int getIdDocente() {
+        return idDocente;
     }
 
-    public void setid_Docente(String docente) {
-        this.docente = docente;
+    public void setIdDocente(int idDocente) {
+        this.idDocente = idDocente;
     }
-
 }

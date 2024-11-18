@@ -12,11 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
 
 import Plataforma.GUI.Docente.RegistrarDocenteGUI;
 
@@ -100,13 +95,4 @@ public class HomeGUI extends JFrame {
         boton.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(() -> new HomeGUI().setVisible(true));
-    }
 }

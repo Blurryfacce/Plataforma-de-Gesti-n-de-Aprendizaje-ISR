@@ -22,6 +22,7 @@ import Plataforma.Controllers.Validaciones;
 import Plataforma.Controllers.DAO.EstudianteDAO;
 import Plataforma.GUI.HomeGUI;
 import Plataforma.GUI.LoginGUI;
+import Plataforma.Models.Estudiante;
 
 public class RegistroEstudianteGUI extends JFrame {
     private JTextField txtCedula, txtNombre, txtApellido, txtEmail, txtDireccion;
@@ -194,8 +195,9 @@ public class RegistroEstudianteGUI extends JFrame {
             }
 
             try {
-                boolean registrado = EstudianteDAO.insertarEstudiante(nombre, apellido, cedula, email, direccion,
-                        usuario, contrasena);
+                // Crear un objeto estudiante con los datos ingresados
+                Estudiante estudiante = new Estudiante(nombre, apellido, cedula, email, direccion, usuario, confirmarContrasena);
+                boolean registrado = EstudianteDAO.insertarEstudiante(estudiante);
                 if (registrado) {
                     JOptionPane.showMessageDialog(this, "Estudiante registrado con éxito.");
                     this.limpiarCampos();

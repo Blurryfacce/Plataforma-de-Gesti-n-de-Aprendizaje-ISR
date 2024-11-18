@@ -5,33 +5,30 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import Plataforma.Database.DatabaseConnection;
+import Plataforma.Models.Docente;
 
 public class DocenteDAO {
 
     /**
      * Inserta un docente en la base de datos.
      * 
-     * @param nombre       El nombre del docente.
-     * @param apellido     El apellido del docente.
-     * @param cedula       La cédula del docente.
-     * @param email        El email del docente.
-     * @param departamento El departamento del docente.
+     * @param docente Objeto Docente que contiene los datos a insertar.
      * @return true si el registro fue exitoso, false en caso contrario.
      */
-    public static boolean insertarDocente(String nombre, String apellido, String cedula, String email, String departamento, String usuario, String contrasena) {
+    public static boolean insertarDocente(Docente docente) {
         String sql = "INSERT INTO Docentes (nombre, apellido, cedula, email, departamento, usuario_Docent, clave) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection connection = DatabaseConnection.connect();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // Configuración de parámetros
-            pstmt.setString(1, nombre);
-            pstmt.setString(2, apellido);
-            pstmt.setString(3, cedula);
-            pstmt.setString(4, email);
-            pstmt.setString(5, departamento);
-            pstmt.setString(6, usuario);
-            pstmt.setString(7, contrasena);
+            pstmt.setString(1, docente.getNombre());
+            pstmt.setString(2, docente.getApellido());
+            pstmt.setString(3, docente.getCedula());
+            pstmt.setString(4, docente.getEmail());
+            pstmt.setString(5, docente.getDepartamento());
+            pstmt.setString(6, docente.getUsuario());
+            pstmt.setString(7, docente.getClave());
 
             // Ejecutar la consulta
             pstmt.executeUpdate();

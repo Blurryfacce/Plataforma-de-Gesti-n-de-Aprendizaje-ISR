@@ -23,6 +23,7 @@ import Plataforma.Controllers.Validaciones;
 import Plataforma.Controllers.DAO.DocenteDAO;
 import Plataforma.GUI.HomeGUI;
 import Plataforma.GUI.LoginGUI;
+import Plataforma.Models.Docente;
 
 public class RegistrarDocenteGUI extends JFrame {
     private JTextField txtNombre, txtApellido, txtCedula, txtEmail, txtDepartamento;
@@ -200,24 +201,27 @@ public class RegistrarDocenteGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.");
                 return;
             }
-
             try {
-                boolean registrado = DocenteDAO.insertarDocente(nombre, apellido, cedula, email, departamento,
-                        usuario, contrasena);
+                // Crear un objeto Docente con los datos ingresados
+                Docente docente = new Docente(nombre, apellido, cedula, email, departamento, usuario, contrasena);
+
+                // Pasar el objeto Docente al método insertarDocente
+                boolean registrado = DocenteDAO.insertarDocente(docente);
+
+                // Verificar si el registro fue exitoso
                 if (registrado) {
                     JOptionPane.showMessageDialog(this, "Docente registrado con éxito.");
-                    this.limpiarCampos();
-                    this.dispose();
-                    new LoginGUI().setVisible(true);
+                    this.limpiarCampos(); // Limpia los campos después de registrar
+                    this.dispose(); // Cierra la ventana actual
+                    new LoginGUI().setVisible(true); // Redirige al usuario al login
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al registrar al docente. Intente nuevamente.");
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage(), "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace(); // Imprime el error en la consola
+                // Manejo de excepciones
+                JOptionPane.showMessageDialog(this, "Ocurrió un error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace(); // Imprime el error en la consola para depuración
             }
-
         }
     }
 

@@ -23,11 +23,12 @@ CREATE TABLE IF NOT EXISTS Docentes (
     clave TEXT NOT NULL
 );
 
--- Tabla de curso
+
+-- Crear la tabla Curso con la relación adecuada
 CREATE TABLE IF NOT EXISTS Curso (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL,
     descripcion TEXT,
-    Docente INTEGER NOT NULL,
-    FOREIGN KEY (id_Docente) REFERENCES Docente(id)
+    id_Docente INTEGER NOT NULL,
+    FOREIGN KEY (id_Docente) REFERENCES Docentes(id_Docente)
 );

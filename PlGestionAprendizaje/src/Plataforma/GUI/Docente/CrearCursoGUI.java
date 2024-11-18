@@ -2,74 +2,83 @@ package Plataforma.GUI.Docente;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 import Plataforma.Controllers.DAO.CursoDAO;
 import Plataforma.Models.Curso;
 
 public class CrearCursoGUI extends JFrame {
-    private JTextField txtNombre;
-    private JTextArea txtDescripcion;
-    private JTextField txtDocente;
+    private JTextField txtNombreCurso;
+    private JTextField txtDescripcion;
+    private JTextField txtNombreDocente;
+    private JButton btnCrearCurso;
 
     public CrearCursoGUI() {
         setTitle("Crear Curso");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
 
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        JLabel lblNombreCurso = new JLabel("Nombre del Curso:");
+        lblNombreCurso.setBounds(20, 20, 150, 25);
+        add(lblNombreCurso);
 
-        // Campos de entrada
-        JPanel panelCampos = new JPanel(new GridLayout(3, 2, 10, 10));
-
-        JLabel lblNombre = new JLabel("Nombre del Curso:");
-        txtNombre = new JTextField();
+        txtNombreCurso = new JTextField();
+        txtNombreCurso.setBounds(180, 20, 150, 25);
+        add(txtNombreCurso);
 
         JLabel lblDescripcion = new JLabel("Descripción:");
-        txtDescripcion = new JTextArea(3, 20);
-        txtDescripcion.setLineWrap(true);
-        txtDescripcion.setWrapStyleWord(true);
+        lblDescripcion.setBounds(20, 60, 150, 25);
+        add(lblDescripcion);
 
-        JLabel lblDocente = new JLabel("id_Docente:");
-        txtDocente = new JTextField();
+        txtDescripcion = new JTextField();
+        txtDescripcion.setBounds(180, 60, 150, 25);
+        add(txtDescripcion);
 
-        panelCampos.add(lblNombre);
-        panelCampos.add(txtNombre);
-        panelCampos.add(lblDescripcion);
-        panelCampos.add(new JScrollPane(txtDescripcion));
-        panelCampos.add(lblDocente);
-        panelCampos.add(txtDocente);
+        JLabel lblNombreDocente = new JLabel("Nombre y apellido: ");
+        lblNombreDocente.setBounds(20, 100, 150, 25);
+        add(lblNombreDocente);
 
-        panel.add(panelCampos, BorderLayout.CENTER);
+        txtNombreDocente = new JTextField();
+        txtNombreDocente.setBounds(180, 100, 150, 25);
+        add(txtNombreDocente);
 
-        // Botón Guardar
-        JButton btnGuardar = new JButton("Guardar Curso");
-        btnGuardar.addActionListener(this::guardarCurso);
-        panel.add(btnGuardar, BorderLayout.SOUTH);
+        btnCrearCurso = new JButton("Crear Curso");
+        btnCrearCurso.setBounds(120, 150, 150, 30);
+        add(btnCrearCurso);
 
-        add(panel);
-    }
+        btnCrearCurso.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombreCurso = txtNombreCurso.getText();
+                String descripcion = txtDescripcion.getText();
+                String nombreDocente = txtNombreDocente.getText();
+        
+                CursoDAO cursoDAO = new CursoDAO();
+                int idDocente = cursoDAO.obtenerIdDocentePorNombre(nombreDocente);
+        
+                if (idDocente == -1) {
+                    JOptionPane.showMessageDialog(null, "No hay un docente designado para esta materia.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (cursoDAO.cursoExiste(nombreCurso)) {
+                    JOptionPane.showMessageDialog(null, "Ya existe un curso con ese nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    Curso curso = new Curso();
+                    curso.setNombre(nombreCurso);
+                    curso.setDescripcion(descripcion);
+                    curso.setIdDocente(idDocente);
+        
+                    if (cursoDAO.agregarCurso(curso)) {
+                        JOptionPane.showMessageDialog(null, "Curso creado exitosamente.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al crear el curso.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        
 
-    private void guardarCurso(ActionEvent e) {
-        String nombre = txtNombre.getText().trim();
-        String descripcion = txtDescripcion.getText().trim();
-        String docente = txtDocente.getText().trim();
-
-        if (nombre.isEmpty() || descripcion.isEmpty() || docente.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Curso curso = new Curso(0, nombre, descripcion, docente);
-        CursoDAO cursoDAO = new CursoDAO();
-
-        if (cursoDAO.agregarCurso(curso)) {
-            JOptionPane.showMessageDialog(this, "Curso creado exitosamente!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Cerrar la ventana después de guardar
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al crear el curso.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+   
     }
 }
