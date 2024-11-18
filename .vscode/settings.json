@@ -3,6 +3,9 @@
         "lib/**/*.jar",
         "c:\\Users\\jhair\\OneDrive - Escuela Politécnica Nacional\\Personal-Projects\\LibJava\\flatlaf-3.0.jar",
         "c:\\Users\\jhair\\OneDrive - Escuela Politécnica Nacional\\Personal-Projects\\LibJava\\flatlaf-intellij-themes-3.0.jar",
-        "c:\\Users\\jhair\\OneDrive - Escuela Politécnica Nacional\\Personal-Projects\\LibJava\\sqlite-jdbc-3.40.0.0.jar"
+        "c:\\Users\\jhair\\OneDrive - Escuela Politécnica Nacional\\Personal-Projects\\LibJava\\sqlite-jdbc-3.40.0.0.jar",
+        "c:\\Users\\USUARIO\\Downloads\\LibreriasJava\\flatlaf-3.0.jar",
+        "c:\\Users\\USUARIO\\Downloads\\LibreriasJava\\flatlaf-intellij-themes-3.0.jar",
+        "c:\\Users\\USUARIO\\Downloads\\LibreriasJava\\sqlite-jdbc-3.40.0.0.jar"
     ]
 }
