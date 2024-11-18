@@ -83,7 +83,7 @@ public class HubDocenteGUI extends JFrame {
      */
     private void abrirCrearCurso(ActionEvent e) {
         new CrearCursoGUI().setVisible(true);
-        // Implementar funcionalidad específica para Crear Curso.
+       
     }
 
     /**
