@@ -8,10 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
-import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
 
 import Plataforma.GUI.LoginGUI;
 
@@ -62,13 +59,4 @@ public class HubEstudianteGUI extends JFrame {
         boton.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new FlatDarkFlatIJTheme());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(() -> new HubEstudianteGUI().setVisible(true));
-    }
 }

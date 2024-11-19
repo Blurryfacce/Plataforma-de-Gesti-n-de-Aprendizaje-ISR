@@ -3,6 +3,7 @@ package Plataforma.Controllers.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import Plataforma.Database.DatabaseConnection;
 import Plataforma.Models.Docente;
@@ -39,5 +40,15 @@ public class DocenteDAO {
             System.err.println("Error al insertar el docente: " + e.getMessage());
             return false;
         }
+    }
+
+    public int obtenerIdDocentePorNombre(String docenteSeleccionado) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerIdDocentePorNombre'");
+    }
+
+    public List<Docente> obtenerDocentes() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerDocentes'");
     }
 }

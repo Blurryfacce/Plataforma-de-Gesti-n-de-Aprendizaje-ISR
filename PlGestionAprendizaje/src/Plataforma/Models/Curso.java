@@ -27,8 +27,8 @@ public class Curso {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescripcion(String descripcion2) {
+        this.descripcion = descripcion2;
     }
 
     public int getIdDocente() {
@@ -37,5 +37,10 @@ public class Curso {
 
     public void setIdDocente(int idDocente) {
         this.idDocente = idDocente;
+    }
+
+    public void setDuracion(int duracion) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDuracion'");
     }
 }

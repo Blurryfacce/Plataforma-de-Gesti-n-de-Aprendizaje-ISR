@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class HubDocenteGUI extends JFrame {
-    private JButton btnCrearCurso, btnGestionarInscripciones, btnSubirRecursos, btnCerrarSesion;
+    private JButton btnCrearCurso, btnGestionarCursos,btnCerrarSesion;
 
     public HubDocenteGUI(String nombreDocente) {
         setTitle("Hub del Docente");
@@ -43,17 +43,14 @@ public class HubDocenteGUI extends JFrame {
         estilizarBoton(btnCrearCurso);
         panelBotones.add(btnCrearCurso);
 
-        // Botón para Gestionar Inscripciones
-        btnGestionarInscripciones = new JButton("Gestionar Inscripciones");
-        btnGestionarInscripciones.addActionListener(this::abrirGestionarInscripciones);
-        estilizarBoton(btnGestionarInscripciones);
-        panelBotones.add(btnGestionarInscripciones);
+        
+        btnGestionarCursos = new JButton("Gestionar Cursos");
+        btnGestionarCursos.addActionListener(this::abrirGestionarCursos);
+        estilizarBoton(btnGestionarCursos);
+        panelBotones.add(btnGestionarCursos);
 
-        // Botón para Subir Recursos
-        btnSubirRecursos = new JButton("Subir Recursos");
-        btnSubirRecursos.addActionListener(this::abrirSubirRecursos);
-        estilizarBoton(btnSubirRecursos);
-        panelBotones.add(btnSubirRecursos);
+        panel.add(panelBotones, BorderLayout.CENTER);
+        add(panel);
 
         // Botón para Cerrar Sesión
         btnCerrarSesion = new JButton("Cerrar Sesión");
@@ -83,23 +80,13 @@ public class HubDocenteGUI extends JFrame {
      */
     private void abrirCrearCurso(ActionEvent e) {
         new CrearCursoGUI().setVisible(true);
-       
     }
 
     /**
-     * Acción para abrir la ventana de Gestionar Inscripciones.
+     * Acción para abrir la ventana de Gestionar Cursos.
      */
-    private void abrirGestionarInscripciones(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, "Aquí se abrirá la funcionalidad para Gestionar Inscripciones.");
-        // Implementar funcionalidad específica para Gestionar Inscripciones.
-    }
-
-    /**
-     * Acción para abrir la ventana de Subir Recursos.
-     */
-    private void abrirSubirRecursos(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, "Aquí se abrirá la funcionalidad para Subir Recursos.");
-        // Implementar funcionalidad específica para Subir Recursos.
+    private void abrirGestionarCursos(ActionEvent e) {
+        new GestionarCursosGUI().setVisible(true);
     }
 
     /**
@@ -118,7 +105,5 @@ public class HubDocenteGUI extends JFrame {
     /**
      * Método principal para pruebas.
      */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new HubDocenteGUI("Profesor Ejemplo").setVisible(true));
-    }
+
 }

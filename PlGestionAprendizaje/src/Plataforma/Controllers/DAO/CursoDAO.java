@@ -4,14 +4,27 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import Plataforma.Database.DatabaseConnection;
 import Plataforma.Models.Curso;
 
 public class CursoDAO {
+    private static final String INSERT_COURSE_SQL = "INSERT INTO cursos (nombre, descripcion, duracion) VALUES (?, ?, ?)";
+    public static boolean guardarCurso(String nombre, String descripcion, int duracion) {
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_COURSE_SQL)) {
+            preparedStatement.setString(1, nombre);
+            preparedStatement.setString(2, descripcion);
+            preparedStatement.setInt(3, duracion);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0; // Si se insertaron filas, significa que el curso se guardó correctamente.
+        } catch (SQLException e) {
+            System.out.println("Error al guardar el curso: " + e.getMessage());
+            return false;
+        }
+    }
 
     public int obtenerIdDocentePorNombre(String nombreCompleto) {
         String sql = "SELECT id_Docente FROM Docentes WHERE (nombre || ' ' || apellido) = ?";
