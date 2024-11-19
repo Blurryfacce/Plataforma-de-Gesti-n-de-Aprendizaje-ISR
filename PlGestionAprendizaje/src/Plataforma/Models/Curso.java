@@ -6,6 +6,13 @@ public class Curso {
     private String descripcion;
     private int idDocente; // Se almacenará el ID del docente asociado
 
+    public Curso(int id, String nombre, String descripcion, int idDocente) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.idDocente = idDocente;
+    }
+
     // Getters y setters
     public int getId() {
         return id;
@@ -37,10 +44,5 @@ public class Curso {
 
     public void setIdDocente(int idDocente) {
         this.idDocente = idDocente;
-    }
-
-    public void setDuracion(int duracion) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setDuracion'");
     }
 }

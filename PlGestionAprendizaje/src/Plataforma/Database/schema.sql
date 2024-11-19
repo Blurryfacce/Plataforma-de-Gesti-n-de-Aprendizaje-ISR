@@ -27,8 +27,11 @@ CREATE TABLE IF NOT EXISTS Cursos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL,
     descripcion TEXT NOT NULL,
-    duracion INTEGER NOT NULL
+    duracion INTEGER NOT NULL,
+    id_Docente INTEGER,
+    FOREIGN KEY (id_docente) REFERENCES Docentes(id_Docente)
 );
+
 
 -- Tabla de inscripciones (relaciona a los estudiantes con los cursos)
 CREATE TABLE IF NOT EXISTS Inscripciones (
@@ -36,6 +39,7 @@ CREATE TABLE IF NOT EXISTS Inscripciones (
     estudiante_id INTEGER NOT NULL,
     curso_id INTEGER NOT NULL,
     fecha_inscripcion TEXT NOT NULL,
+    estado TEXT DEFAULT 'Pendiente',
     FOREIGN KEY (estudiante_id) REFERENCES Estudiantes(id),
     FOREIGN KEY (curso_id) REFERENCES Cursos(id)
 );
@@ -66,6 +70,5 @@ CREATE TABLE IF NOT EXISTS Cursos_Recursos (
     FOREIGN KEY (id_curso) REFERENCES Cursos(id),
     FOREIGN KEY (id_recurso) REFERENCES Recursos(id)
 );
-
 
 

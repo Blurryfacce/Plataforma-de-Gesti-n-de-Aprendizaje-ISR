@@ -1,10 +1,7 @@
 package Plataforma.GUI.Docente;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import Plataforma.Database.DatabaseConnection;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -15,16 +12,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
+import Plataforma.Database.DatabaseConnection;
+
 public class GestionarCursosGUI extends JFrame {
     private DefaultTableModel modeloEstudiantes;
     private JTable tablaCursos;
-    private JButton btnEditar, btnEliminar, btnVerEstudiantes, btnSubirRecurso, btnVerRecursos;
+    private JButton btnEditar, btnEliminar, btnVerEstudiantes, btnSubirRecurso, btnVerRecursos, btnAceptarCupo;
     private DefaultTableModel modeloCursos;
     private JTable tablaEstudiantes;
 
-    public GestionarCursosGUI() {
+    public GestionarCursosGUI(String usuarioDocente) {
+
+       
         setTitle("Gestionar Cursos");
-        setSize(600, 400);
+        setSize(700, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -58,12 +73,18 @@ public class GestionarCursosGUI extends JFrame {
         btnVerRecursos = new JButton("Ver Recursos");
         btnVerRecursos.addActionListener(this::verRecursos);
 
+    btnAceptarCupo = new JButton("Aceptar Cupo");
+    btnAceptarCupo.addActionListener(this::aceptarCupo);
+
+
+
         // Añadir los botones al panel
         panelBotones.add(btnEditar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnVerEstudiantes);
         panelBotones.add(btnSubirRecurso);
         panelBotones.add(btnVerRecursos);
+        panelBotones.add(btnAceptarCupo);
 
         panel.add(panelBotones, BorderLayout.SOUTH);
 
@@ -71,36 +92,88 @@ public class GestionarCursosGUI extends JFrame {
         cargarCursos();
     }
 
-    // Método para cargar cursos de la base de datos
-    // Método para cargar cursos de la base de datos
-    private void cargarCursos() {
-        modeloCursos.setRowCount(0); // Limpiar la tabla
-        String sql = "SELECT c.id, c.nombre, c.descripcion, c.duracion, " +
-                "(SELECT COUNT(*) FROM Inscripciones i WHERE i.curso_id = c.id) AS num_estudiantes " +
-                "FROM Cursos c";
 
-        try (Connection conn = DatabaseConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
+// Método para cargar cursos de la base de datos
+private void cargarCursos() {
+    modeloCursos.setRowCount(0); // Limpiar la tabla
+    String sql = "SELECT c.id, c.nombre, c.descripcion, c.duracion, " +
+            "(SELECT COUNT(*) FROM Inscripciones i WHERE i.curso_id = c.id) AS num_estudiantes " +
+            "FROM Cursos c";
 
-            while (rs.next()) {
-                modeloCursos.addRow(new Object[] {
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("descripcion"),
-                        rs.getInt("duracion"),
-                        rs.getInt("num_estudiantes") // Columna de número de estudiantes
-                });
-            }
+    try (Connection conn = DatabaseConnection.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery()) {
 
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar los cursos: " + ex.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+        while (rs.next()) {
+            modeloCursos.addRow(new Object[] {
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("descripcion"),
+                    rs.getInt("duracion"),
+                    rs.getInt("num_estudiantes") // Columna de número de estudiantes
+            });
         }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar los cursos: " + ex.getMessage(), "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+private void aceptarCupo(ActionEvent e) {
+    int filaSeleccionada = tablaEstudiantes.getSelectedRow();
+    if (filaSeleccionada == -1) {
+        // Mensaje de advertencia si no se selecciona un estudiante
+        JOptionPane.showMessageDialog(this, 
+            "Debe seleccionar un estudiante para aceptar el cupo.", 
+            "Advertencia", 
+            JOptionPane.WARNING_MESSAGE);
+        return; // Salir del método si no hay selección
     }
 
-    // Acción para subir recursos
-    // Acción para subir recursos
+    // Obtener la información del estudiante seleccionado
+    String cedulaEstudiante = (String) modeloEstudiantes.getValueAt(filaSeleccionada, 0);
+    String nombreEstudiante = (String) modeloEstudiantes.getValueAt(filaSeleccionada, 1);
+    String apellidoEstudiante = (String) modeloEstudiantes.getValueAt(filaSeleccionada, 2);
+
+    // Confirmar la acción de aceptar el cupo
+    int confirm = JOptionPane.showConfirmDialog(this, 
+        "¿Está seguro de que desea aceptar el cupo para el estudiante: " 
+        + nombreEstudiante + " " + apellidoEstudiante + "?", 
+        "Confirmar aceptación", 
+        JOptionPane.YES_NO_OPTION);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        aceptarCupoDeEstudiante(cedulaEstudiante, nombreEstudiante, apellidoEstudiante);
+    }
+}
+
+private void aceptarCupoDeEstudiante(String cedulaEstudiante, String nombreEstudiante, String apellidoEstudiante) {
+    String sql = "UPDATE inscripciones SET estado = 'Aceptado' WHERE estudiante_cedula = ?";
+    try (Connection conn = DatabaseConnection.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, cedulaEstudiante);
+        pstmt.executeUpdate();
+
+        // Mostrar mensaje de confirmación al docente
+        JOptionPane.showMessageDialog(this, 
+            "El cupo del estudiante " + nombreEstudiante + " " + apellidoEstudiante + " ha sido aceptado con éxito.", 
+            "Cupo Aceptado", 
+            JOptionPane.INFORMATION_MESSAGE);
+
+        // Actualizar la tabla de estudiantes
+        verEstudiantes(null);
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al aceptar el cupo: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+     // Acción para subir recursos
     private void subirRecurso(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);

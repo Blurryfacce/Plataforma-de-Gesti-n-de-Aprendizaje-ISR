@@ -1,7 +1,6 @@
 package Plataforma.GUI.Docente;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,8 +20,10 @@ import Plataforma.Controllers.DAO.CursoDAO;
 public class CrearCursoGUI extends JFrame {
     private JTextField txtNombreCurso, txtDescripcion, txtDuracion;
     private JButton btnGuardar, btnCancelar;
+    private String usuarioDocente;
 
-    public CrearCursoGUI() {
+    public CrearCursoGUI(String usuarioDocente) {
+        this.usuarioDocente = usuarioDocente; //Inicializa el nombre del usuario
         setTitle("Crear Curso");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -31,10 +32,10 @@ public class CrearCursoGUI extends JFrame {
         // Panel principal
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panel.setBackground(new Color(245, 245, 245));
+        // panel.setBackground(new Color(245, 245, 245));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Etiqueta y campo de texto para el nombre del curso
@@ -93,31 +94,34 @@ public class CrearCursoGUI extends JFrame {
     /**
      * Acción para guardar un curso.
      */
+    /**
+     * Acción para guardar un curso.
+     */
     private void guardarCurso(ActionEvent e) {
-    String nombre = txtNombreCurso.getText().trim();
-    String descripcion = txtDescripcion.getText().trim();
-    String duracion = txtDuracion.getText().trim();
-
-    if (nombre.isEmpty() || descripcion.isEmpty() || duracion.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    try {
-        int duracionHoras = Integer.parseInt(duracion);
-
-        // Llamar al método de la clase CursoDAO para guardar el curso en la base de datos
-        boolean cursoGuardado = CursoDAO.guardarCurso(nombre, descripcion, duracionHoras);
-
-        if (cursoGuardado) {
-            JOptionPane.showMessageDialog(this, "Curso guardado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Cerrar la ventana
-        } else {
-            JOptionPane.showMessageDialog(this, "Hubo un error al guardar el curso. Intenta nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
+        String nombre = txtNombreCurso.getText().trim();
+        String descripcion = txtDescripcion.getText().trim();
+        String duracion = txtDuracion.getText().trim();
+    
+        if (nombre.isEmpty() || descripcion.isEmpty() || duracion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "La duración debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+    
+        try {
+            int duracionHoras = Integer.parseInt(duracion);
+    
+            // Llamar al método de la clase CursoDAO para guardar el curso en la base de datos
+            boolean cursoGuardado = CursoDAO.guardarCurso(nombre, descripcion, duracionHoras, usuarioDocente);  // usuarioDocente es el nombre
+    
+            if (cursoGuardado) {
+                JOptionPane.showMessageDialog(this, "Curso guardado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                dispose(); // Cerrar la ventana
+            } else {
+                JOptionPane.showMessageDialog(this, "Hubo un error al guardar el curso. Intenta nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "La duración debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
-
+    
 }

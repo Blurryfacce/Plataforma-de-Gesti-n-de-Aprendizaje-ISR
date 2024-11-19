@@ -17,7 +17,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class HubDocenteGUI extends JFrame {
-    private JButton btnCrearCurso, btnGestionarCursos,btnCerrarSesion;
+    private JButton btnCrearCurso, btnGestionarCursos, btnCerrarSesion;
+    private String usuarioDocente;
 
     public HubDocenteGUI(String nombreDocente) {
         setTitle("Hub del Docente");
@@ -25,10 +26,13 @@ public class HubDocenteGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        // Obtener el usuarioDocente logeado
+        usuarioDocente = nombreDocente; // Guardar el nombre del docente
+
         // Panel principal
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
+
         // Etiqueta de bienvenida
         JLabel lblBienvenida = new JLabel("Bienvenido, " + nombreDocente, SwingConstants.CENTER);
         lblBienvenida.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -43,7 +47,6 @@ public class HubDocenteGUI extends JFrame {
         estilizarBoton(btnCrearCurso);
         panelBotones.add(btnCrearCurso);
 
-        
         btnGestionarCursos = new JButton("Gestionar Cursos");
         btnGestionarCursos.addActionListener(this::abrirGestionarCursos);
         estilizarBoton(btnGestionarCursos);
@@ -79,21 +82,38 @@ public class HubDocenteGUI extends JFrame {
      * Acción para abrir la ventana de Crear Curso.
      */
     private void abrirCrearCurso(ActionEvent e) {
-        new CrearCursoGUI().setVisible(true);
+        if (usuarioDocente == null) {
+            JOptionPane.showMessageDialog(this, "No se ha encontrado un docente logueado.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Abrir la ventana para crear un curso, pasando el usuarioDocente
+        CrearCursoGUI crearCursoGUI = new CrearCursoGUI(usuarioDocente);
+        crearCursoGUI.setVisible(true);
     }
 
     /**
      * Acción para abrir la ventana de Gestionar Cursos.
      */
+    // En la clase HubDocenteGUI, al abrir GestionarCursos
     private void abrirGestionarCursos(ActionEvent e) {
-        new GestionarCursosGUI().setVisible(true);
+        if (usuarioDocente == null) {
+            JOptionPane.showMessageDialog(this, "No se ha encontrado un docente logueado.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Abrir la ventana de GestionarCursosGUI, pasando el usuarioDocente
+        GestionarCursosGUI gestionarCursosGUI = new GestionarCursosGUI(usuarioDocente);
+        gestionarCursosGUI.setVisible(true);
     }
 
     /**
      * Acción para cerrar sesión.
      */
     private void cerrarSesion(ActionEvent e) {
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas cerrar sesión?", 
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas cerrar sesión?",
                 "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             this.dispose();
@@ -101,9 +121,5 @@ public class HubDocenteGUI extends JFrame {
             SwingUtilities.invokeLater(() -> new Plataforma.GUI.LoginGUI().setVisible(true));
         }
     }
-
-    /**
-     * Método principal para pruebas.
-     */
 
 }
