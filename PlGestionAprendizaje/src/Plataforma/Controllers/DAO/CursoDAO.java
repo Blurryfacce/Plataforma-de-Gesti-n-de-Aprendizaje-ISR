@@ -16,10 +16,7 @@ public class CursoDAO {
             "            VALUES (?, ?, ?, ?)";
 
     public static boolean guardarCurso(String nombre, String descripcion, int duracion, String usuarioDocente) {
-        String INSERT_COURSE_SQL = """
-                    INSERT INTO Cursos (nombre, descripcion, duracion, id_Docente)
-                    VALUES (?, ?, ?, ?)
-                """;
+        
 
         // Obtener el id_Docente a partir del nombre de usuario
         int idDocente = obtenerIdDocente(usuarioDocente);

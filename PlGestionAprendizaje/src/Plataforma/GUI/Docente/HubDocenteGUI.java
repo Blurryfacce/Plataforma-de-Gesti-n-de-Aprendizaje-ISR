@@ -22,7 +22,7 @@ public class HubDocenteGUI extends JFrame {
 
     public HubDocenteGUI(String nombreDocente) {
         setTitle("Hub del Docente");
-        setSize(600, 400);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

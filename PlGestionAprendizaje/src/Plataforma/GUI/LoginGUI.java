@@ -141,7 +141,7 @@ public class LoginGUI extends JFrame {
             dispose();
         } else if ("Estudiante".equals(rol)) {
             JOptionPane.showMessageDialog(this, "Bienvenido, Estudiante.");
-            new HubEstudianteGUI().setVisible(true); // Abre la interfaz del estudiante
+            new HubEstudianteGUI(getDefaultCloseOperation()).setVisible(true); // Abre la interfaz del estudiante
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
